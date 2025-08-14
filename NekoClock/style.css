@@ -10,17 +10,16 @@ body {
 
 .clock {
     display: flex;
-    gap: 10px;
+    gap: 0;
 }
 
 .digit {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    image-rendering: crisp-edges;
-    transition: transform 0.3s ease;
+    margin: 0 -15px;
 }
 
 .digit.changed {
