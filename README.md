@@ -5,13 +5,6 @@
 ## What is this?
 A simple but adorable digital clock project where numbers are replaced with neko-chan (catgirl) images. Created "out of boredom", but someone might enjoy it!
 
-## Features & Improvement Ideas
-- Animated GIF digits (to make the catgirls come alive!)
-- Potential adaptations for:
-  - Android/Windows widgets
-  - Browser homepage customization
-  - Screensavers
-
 ## How to Use
 Simply open `index.html` in your favorite web browser!
 
