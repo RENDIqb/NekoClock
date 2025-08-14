@@ -1,7 +1,7 @@
 
 <h1 align="center">
     <div align="center">
-        <img src="asset/preview.png" width=400>
+        <img src="preview.png" width=400>
     </div>
 </h1>
 
