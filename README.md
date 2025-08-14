@@ -1,6 +1,6 @@
 # NekoClock - Catgirl Digital Clock
 
-![NekoClock Preview](https://github.com/RENDIqb/NekoClock/blob/main/preview.jpg)
+![NekoClock Preview](preview.png)
 
 ## What is this?
 A simple but adorable digital clock project where numbers are replaced with neko-chan (catgirl) images. Created "out of boredom", but someone might enjoy it!
