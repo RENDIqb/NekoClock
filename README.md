@@ -1,6 +1,9 @@
-# NekoClock - Catgirl Digital Clock
 
-![NekoClock Preview](preview.png)
+<h1 align="center">
+    <div align="center">
+        <img src="asset/preview.png" width=400>
+    </div>
+</h1>
 
 ## What is this?
 A simple but adorable digital clock project where numbers are replaced with neko-chan (catgirl) images. Created "out of boredom", but someone might enjoy it!
