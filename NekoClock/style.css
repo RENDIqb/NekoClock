@@ -1,1 +1,33 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #9adaff;
+    user-select: none;
+}
 
+.clock {
+    display: flex;
+    gap: 10px;
+}
+
+.digit {
+    width: 120px;
+    height: 120px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: crisp-edges;
+    transition: transform 0.3s ease;
+}
+
+.digit.changed {
+    animation: digitChange 0.5s ease;
+}
+
+@keyframes digitChange {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
