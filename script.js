@@ -2,77 +2,86 @@ let previousTime = {
     hours: '',
     minutes: ''
 };
-let visibilityHandler;
+let wakeLock = null;
+let timeoutId = null;
 
-function updateClock(forceUpdate = false) {
+function updateClock() {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    
-    const shouldUpdate = forceUpdate || 
-                       hours !== previousTime.hours || 
-                       minutes !== previousTime.minutes;
-    
-    if (shouldUpdate) {
+    const seconds = now.getSeconds();
+    const milliseconds = now.getMilliseconds();
+
+    if (hours !== previousTime.hours || minutes !== previousTime.minutes) {
         updateDigit('hour-tens', hours[0], previousTime.hours[0] !== hours[0]);
         updateDigit('hour-ones', hours[1], previousTime.hours[1] !== hours[1]);
         updateDigit('minute-tens', minutes[0], previousTime.minutes[0] !== minutes[0]);
         updateDigit('minute-ones', minutes[1], previousTime.minutes[1] !== minutes[1]);
-
         previousTime = { hours, minutes };
     }
+
+    const delay = (60 - seconds) * 1000 - milliseconds;
+    
+    const executionStart = performance.now();
+    timeoutId = setTimeout(() => {
+        const executionTime = performance.now() - executionStart;
+        updateClock();
+    }, delay - 10);
 }
 
 function updateDigit(elementId, newDigit, hasChanged) {
     const element = document.getElementById(elementId);
+    if (!element) return;
+    
     element.style.backgroundImage = `url('images/${newDigit}.png')`;
     
     if (hasChanged) {
         element.classList.add('changed');
-        setTimeout(() => {
-            element.classList.remove('changed');
-        }, 500);
+        setTimeout(() => element.classList.remove('changed'), 500);
+    }
+}
+
+async function activateWakeLock() {
+    if ('wakeLock' in navigator) {
+        try {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('Wake Lock activated!');
+        } catch (err) {
+            console.warn('Wake Lock Error:', err);
+        }
     }
 }
 
 function handleVisibilityChange() {
     if (document.visibilityState === 'visible') {
-        updateClock(true);
-        
-        const now = new Date();
-        const delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
-        
-        setTimeout(() => {
-            updateClock();
-            setInterval(updateClock, 60000);
-        }, delay);
+        updateClock();
+        activateWakeLock();
     }
 }
 
 function initClock() {
-    const clock = document.querySelector('.clock');
-    const hourOnes = document.getElementById('hour-ones');
-    
-    const separator = document.createElement('div');
+    const separator = document.getElementById('separator') || document.createElement('div');
     separator.className = 'digit';
     separator.id = 'separator';
     separator.style.backgroundImage = "url('images/sep.png')";
-    clock.insertBefore(separator, hourOnes.nextSibling);
-    
+    document.querySelector('.clock').insertBefore(separator, document.getElementById('hour-ones').nextSibling);
+
     const now = new Date();
     previousTime.hours = now.getHours().toString().padStart(2, '0');
     previousTime.minutes = now.getMinutes().toString().padStart(2, '0');
-    
-    document.getElementById('hour-tens').style.backgroundImage = `url('images/${previousTime.hours[0]}.png')`;
-    document.getElementById('hour-ones').style.backgroundImage = `url('images/${previousTime.hours[1]}.png')`;
-    document.getElementById('minute-tens').style.backgroundImage = `url('images/${previousTime.minutes[0]}.png')`;
-    document.getElementById('minute-ones').style.backgroundImage = `url('images/${previousTime.minutes[1]}.png')`;
-    
-    visibilityHandler = handleVisibilityChange;
-    document.addEventListener('visibilitychange', visibilityHandler);
-    
+    updateDigit('hour-tens', previousTime.hours[0], false);
+    updateDigit('hour-ones', previousTime.hours[1], false);
+    updateDigit('minute-tens', previousTime.minutes[0], false);
+    updateDigit('minute-ones', previousTime.minutes[1], false);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    activateWakeLock();
     updateClock();
-    setInterval(updateClock, 60000);
 }
+
+window.addEventListener('beforeunload', () => {
+    if (timeoutId) clearTimeout(timeoutId);
+    if (wakeLock) wakeLock.release().catch(console.warn);
+});
 
 window.addEventListener('load', initClock);
