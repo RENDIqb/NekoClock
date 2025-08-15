@@ -19,14 +19,27 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    margin: 0 -15px;
+    margin: 0 -30px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .digit.changed {
-    animation: digitChange 0.5s ease;
+    animation: digitChange 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
 @keyframes digitChange {
-    0% { opacity: 0; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1); }
+    0% { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.9); 
+        filter: brightness(1.5);
+    }
+    50% {
+        opacity: 0.8;
+        filter: brightness(1.2);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+        filter: brightness(1);
+    }
 }
